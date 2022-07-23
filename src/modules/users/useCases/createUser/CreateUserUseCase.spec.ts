@@ -2,14 +2,14 @@ import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUs
 import { CreateUserError } from "./CreateUserError";
 import { CreateUserUseCase } from "./CreateUserUseCase";
 
-let createUserRepositoryInMemory: InMemoryUsersRepository;
+let usersRepositoryInMemory: InMemoryUsersRepository;
 let createUserUseCase: CreateUserUseCase;
 
 describe('Create User Use Case', () => {
 
   beforeEach(() => {
-    createUserRepositoryInMemory = new InMemoryUsersRepository();
-    createUserUseCase = new CreateUserUseCase(createUserRepositoryInMemory);
+    usersRepositoryInMemory = new InMemoryUsersRepository();
+    createUserUseCase = new CreateUserUseCase(usersRepositoryInMemory);
   });
 
   it('should be able to create a new user', async () => {

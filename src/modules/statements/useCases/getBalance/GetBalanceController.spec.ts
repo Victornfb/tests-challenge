@@ -3,8 +3,9 @@ import request from "supertest";
 import { app } from "../../../../app";
 
 let connection: Connection;
+let token: string;
 
-describe('Show User Profile Controller', () => {
+describe('Get Balance Controller', () => {
 
   beforeAll(async () => {
     connection = await createConnection();
@@ -17,6 +18,15 @@ describe('Show User Profile Controller', () => {
         email: 'test@email.com',
         password: 'test-password'
       });
+
+    const response = await request(app)
+      .post('/api/v1/sessions')
+      .send({
+        email: 'test@email.com',
+        password: 'test-password'
+      });
+
+    token = response.body.token;
   });
 
   afterAll(async () => {
@@ -24,22 +34,13 @@ describe('Show User Profile Controller', () => {
     await connection.close();
   });
 
-  it('should be able to show an user profile', async () => {
-    const auth = await request(app)
-      .post('/api/v1/sessions')
-      .send({
-        email: 'test@email.com',
-        password: 'test-password'
-      });
-
+  it('should be able to get balance from an user', async () => {
     const response = await request(app)
-      .get('/api/v1/profile')
-      .set('Authorization', `Bearer ${auth.body.token}`);
+      .get('/api/v1/statements/balance')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('email');
-    expect(response.body.email).toEqual('test@email.com');
+    expect(response.body).toHaveProperty('balance');
   });
 
 });
